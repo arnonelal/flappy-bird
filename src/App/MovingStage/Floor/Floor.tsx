@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import './Floor.scss';
-import floorImgSrc from '../../../assets/gameSprites/floor.png';
+import floorImgSrc from 'assets/gameSprites/floor.png';
+
+const tileWidth = 4.6875; //vh //12/256
 
 
 interface Props {
@@ -11,7 +13,7 @@ interface State {
   firstTileWidth: number,
 }
 
-const tileSpeed = 4 //tiles/sec 
+const tileSpeed = 1 //tiles/sec 
 
 export default class Floor extends Component<Props, State> {
 
@@ -20,7 +22,7 @@ export default class Floor extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      firstTileWidth: 3.25,
+      firstTileWidth: tileWidth,
     };
   }
 
@@ -36,10 +38,10 @@ export default class Floor extends Component<Props, State> {
 
     return setInterval(() => {
 
-      const a = (tileSpeed * 3.25) / this.props.fps; //tile length in pct
+      const a = (tileSpeed * tileWidth) / this.props.fps; //tile length in pct
       let newWidth = this.state.firstTileWidth - a;
       if (newWidth < 0) {
-        newWidth += 3.25;
+        newWidth = tileWidth;
       }
       this.setState({ firstTileWidth: newWidth });
 
@@ -54,7 +56,7 @@ export default class Floor extends Component<Props, State> {
           className='_firstTile'
           src={floorImgSrc}
           alt=""
-          style={{ width: this.state.firstTileWidth + '%' }}
+          style={{ width: this.state.firstTileWidth + 'vh' }}
         />
         <div className='_restOfTiles'></div>
       </div>

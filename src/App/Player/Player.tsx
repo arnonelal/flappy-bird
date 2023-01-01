@@ -3,15 +3,14 @@ import './Player.scss';
 import PlayerGraphic from "./PlayerGraphic/PlayerGraphic";
 
 
-const playerGravity = 180; //pct/sec^2
-const playerJumpVelocity = -70; //pct/sec
-const playerYPosOnStart = 30 //pct
-const maskDiameter = 6; //pct
-
+const playerGravity = 180; //vh/sec^2
+const playerJumpVelocity = -70; //vh/sec
+const playerYPosOnStart = 30 //vh
+const maskDiameter = 4.6875; //vh 12/256
+const floorYPos = 78.125;  //vh 200/256
 
 interface Props {
   onMove: (XPos: number) => void;
-  floorYPos: number;
   fps: number;
   clickHandler: (callback: () => void) => void;
   onChangePhase: (phase: 'preGame' | 'onGame' | 'dead') => void;
@@ -74,11 +73,11 @@ export default class Player extends Component<Props, State> {
       this.playerSpeed += playerGravity / this.props.fps;
       let newPlayerYPos = this.state.playerYPos + (this.playerSpeed / this.props.fps);
 
-      if (newPlayerYPos >= this.props.floorYPos - maskDiameter) { //if player touched or passed through the floor
+      if (newPlayerYPos >= floorYPos - maskDiameter) { //if player touched or passed through the floor
 
         this.setState({
           phase: 'dead',
-          playerYPos: this.props.floorYPos - maskDiameter
+          playerYPos: floorYPos - maskDiameter
         });
 
         clearInterval(this.movementInverval);
@@ -94,7 +93,7 @@ export default class Player extends Component<Props, State> {
   onClick() {
     if (this.state.phase === 'dead') return;
 
-    if (this.state.playerYPos > 10) {
+    if (this.state.playerYPos > 0) {
       this.makePlayerJump();
     }
 
@@ -123,26 +122,16 @@ export default class Player extends Component<Props, State> {
       <div
         id="Player"
         style={{
-          // width: maskDiameter + '%'
-        }}>
-        <div
-          style={{
-            height: this.state.playerYPos + '%',
-          }}
-        >
-        </div>
-        <div
-          className='_mask'
-          style={{
-            height: maskDiameter + '%',
-          }}
-        >
-
-          <PlayerGraphic
-            clickHandler={(callback) => this.clickHandlerCallback = callback}
-            fps={this.props.fps}
-          />
-        </div>
+          width: maskDiameter + 'vh',
+          height: maskDiameter + 'vh',
+          top: this.state.playerYPos + 'vh',
+          left: playerYPosOnStart + 'vh',
+        }}
+      >
+        <PlayerGraphic
+          clickHandler={(callback) => this.clickHandlerCallback = callback}
+          fps={this.props.fps}
+        />
       </div>
     );
   }

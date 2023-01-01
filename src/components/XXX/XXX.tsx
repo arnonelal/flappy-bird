@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import './X.scss';
+import './XXX.scss';
 
 
 
@@ -11,7 +11,7 @@ interface State {
 
 }
 
-export default class X extends Component<Props, State> {
+export default class XXX extends Component<Props, State> {
 
 
   constructor(props: Props) {
@@ -20,13 +20,10 @@ export default class X extends Component<Props, State> {
     };
   }
 
-  componentDidMount() {
-  }
-
 
   render() {
     return (
-      <div id='X'>
+      <div id='XXX'>
 
       </div>
     )

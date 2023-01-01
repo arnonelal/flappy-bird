@@ -1,8 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.scss';
-import Player from '../components/Player/Player';
-import MovingStage from '../components/MovingStage/MovingStage';
+import Player from './Player/Player';
+import MovingStage from './MovingStage/MovingStage';
 
 function App() {
   return (
@@ -13,18 +12,15 @@ function App() {
       className={"unselectable"}
       tabIndex={-1} //for onKeyDown to work
     >
-      <div className='_gameContainer'>
-        <Player
-          clickHandler={(callback) => clickHandlerCallback = callback}
-          floorYPos={81}
-          onMove={() => 0}
-          fps={60}
-          onChangePhase={(phase) => 0}
-        />
-        <MovingStage
-          fps={60}
-        />
-      </div>
+      <Player
+        clickHandler={(callback) => clickHandlerCallback = callback}
+        onMove={() => 0}
+        fps={60}
+        onChangePhase={(phase) => 0}
+      />
+      <MovingStage
+        fps={60}
+      />
     </div>
   );
 }

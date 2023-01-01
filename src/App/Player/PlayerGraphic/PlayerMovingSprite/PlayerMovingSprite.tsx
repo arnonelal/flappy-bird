@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import './PlayerMovingSprite.scss';
-import bird0 from '../../../../assets/gameSprites/bird/bird0.png';
-import bird1 from '../../../../assets/gameSprites/bird/bird1.png';
-import bird2 from '../../../../assets/gameSprites/bird/bird2.png';
+import bird0 from 'assets/gameSprites/bird/bird0.png';
+import bird1 from 'assets/gameSprites/bird/bird1.png';
+import bird2 from 'assets/gameSprites/bird/bird2.png';
 
 
 
@@ -47,7 +47,7 @@ export default class PlayerMovingSprite extends Component<Props, State> {
 
   render() {
     return (
-      <img id='PlayerMovingSprite' src={this.getSprite()} />
+      <img id='PlayerMovingSprite' src={this.getSprite()} alt='' />
     )
   }
 
