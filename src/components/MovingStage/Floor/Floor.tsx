@@ -11,7 +11,7 @@ interface State {
   firstTileWidth: number,
 }
 
-const tileSpeed = 4 //tiles/sec
+const tileSpeed = 4 //tiles/sec 
 
 export default class Floor extends Component<Props, State> {
 
