@@ -1,0 +1,16 @@
+#App {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(85, 85, 85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &>._gameContainer {
+    height: 90vh;
+    width: 60vw;
+    background-color: aqua;
+    position: relative;
+    // overflow: hidden;
+  }
+}

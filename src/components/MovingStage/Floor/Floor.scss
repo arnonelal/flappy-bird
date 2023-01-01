@@ -1,0 +1,25 @@
+#Floor {
+  position: absolute;
+  left: -10%;
+  bottom: 0;
+  height: 21.875%;
+  background-color: #df5b4a;
+  width: 110%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-flow: row;
+
+  &>._firstTile {
+    height: 100%;
+  }
+
+  &>._restOfTiles {
+    background-size: contain;
+    background-repeat: repeat-x;
+    background-image: url('../../../assets/gameSprites/floor.png');
+    // background-color: rgb(44, 30, 247);
+    width: 100%;
+    height: 100%;
+  }
+}

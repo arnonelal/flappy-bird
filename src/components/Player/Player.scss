@@ -1,0 +1,19 @@
+#Player {
+  position: absolute;
+  background-color: red;
+  margin-left: 10%;
+  height: 115%;
+  top: -15%;
+  width: 1%;
+
+
+  &>._mask {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: aquamarine;
+
+  }
+}
