@@ -1,0 +1,24 @@
+@use "../../../global.scss";
+
+
+#Floor {
+  position: absolute;
+  bottom: 0;
+  width: 120vw;
+  display: flex;
+  flex-flow: row;
+
+  @extend .backgroundImageRepeatXBase;
+  background-image: url('../../../assets/gameSprites/floor.png');
+
+  &>._firstTile {
+    height: 100%;
+  }
+
+  &>._restOfTiles {
+
+    // background-color: rgb(44, 30, 247);
+    width: 100%;
+    height: 100%;
+  }
+}

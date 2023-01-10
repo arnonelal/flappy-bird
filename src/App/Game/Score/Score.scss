@@ -1,0 +1,14 @@
+#Score {
+  position: fixed;
+  top: 10vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ._content {
+    ._digit+._digit {
+      margin-left: 0.3vh;
+    }
+  }
+}

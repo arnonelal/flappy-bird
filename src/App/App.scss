@@ -1,9 +1,19 @@
+@use "../global.scss";
+
 #App {
   width: 100vw;
   height: 100vh;
-  background-color: rgb(85, 85, 85);
   display: flex;
   align-items: center;
   justify-content: center;
+  outline: none; //to prevent outline because of tabIndex={-1}
+
+  @extend .notSelectable;
+}
+
+img {
+  image-rendering: pixelated;
+
+  @extend .notDraggable;
 
 }
