@@ -15,5 +15,13 @@ img {
   image-rendering: pixelated;
 
   @extend .notDraggable;
+}
 
+div {
+  display: flex;
+}
+
+button {
+  @extend .noStyleButton;
+  display: flex;
 }

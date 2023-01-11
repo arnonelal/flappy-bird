@@ -1,9 +1,13 @@
-#Instructions {
+#Buttons {
   position: fixed;
-  left: 0;
   width: 100vw;
-  display: flex;
   align-items: center;
-  justify-content: center;
   flex-flow: column;
+  top: 63vh;
+
+  ._content {
+    img {
+      width: 100%;
+    }
+  }
 }

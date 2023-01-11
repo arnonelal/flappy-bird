@@ -1,9 +1,9 @@
 import React from 'react';
-import { BasicHandler } from 'utils/BasicHandler';
+import { HandlerHolder } from 'utils/HandlerHolder';
 import './App.scss';
 import Game from './Game/Game';
 
-const onJumpHandler = new BasicHandler();
+const onJumpHandler = new HandlerHolder();
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       onKeyDown={(e) => onKeyDown(e)}
     >
       <Game
-        handler_onJumpAction={(callback) => onJumpHandler.addCallback(callback)} />
+        handler_onJumpAction={(callback) => onJumpHandler.add(callback)} />
     </div>
   );
 }

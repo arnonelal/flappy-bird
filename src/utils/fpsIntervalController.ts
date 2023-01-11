@@ -14,10 +14,10 @@ export class FpsIntervalController {
 
 
 
-  public add(callback: Callback): FpsIntervalControllerSegment {
+  public add(callback: Callback): FpsInterval {
     const id = this.currentId++;
     this.callbacksInQueue.set(id, callback);
-    return new FpsIntervalControllerSegment(this, id);
+    return new FpsInterval(this, id);
   }
 
   public start(id: number): boolean {
@@ -54,7 +54,7 @@ export class FpsIntervalController {
 }
 
 
-class FpsIntervalControllerSegment {
+class FpsInterval {
   constructor(
     private fpsIntervalController: FpsIntervalController,
     private callbackId: number,

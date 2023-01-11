@@ -1,14 +1,9 @@
-#Score {
+#GameOverTitle {
   position: fixed;
-  top: 15vh;
   width: 100vw;
+  top: 26.5vh;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  ._content {
-    ._digit+._digit {
-      margin-left: 0.3vh;
-    }
-  }
 }

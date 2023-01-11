@@ -1,19 +1,18 @@
 import { Component } from 'react';
 import { FpsIntervalController, fpsIntervalController } from 'utils/fpsIntervalController';
 import { GameConsts } from 'utils/GameConsts';
-import './DeathScreenFlash.scss';
+import './DeathFlashScreen.scss';
 
 
 
 interface Props {
-  handler_flash: (callback: () => void) => void;
 }
 
 interface State {
   opacity: number; //0-1
 }
 
-export default class DeathScreenFlash extends Component<Props, State> {
+export default class DeathFlashScreen extends Component<Props, State> {
 
   flashInterval = fpsIntervalController.add(() => this.flashIntervalStep());
 
@@ -23,7 +22,10 @@ export default class DeathScreenFlash extends Component<Props, State> {
     this.state = {
       opacity: 0,
     };
-    this.props.handler_flash(() => this.flash())
+  }
+
+  componentDidMount(): void {
+    this.flashInterval.start();
   }
 
   componentWillUnmount(): void {
@@ -34,21 +36,15 @@ export default class DeathScreenFlash extends Component<Props, State> {
   render() {
     return (
       <div
-        id='DeathScreenFlash'
+        id='DeathFlashScreen'
         style={{ opacity: this.state.opacity }}
       >
       </div>
     )
   }
 
+
   entersDim = true;
-
-
-  flash() {
-    this.flashInterval.start();
-  }
-
-
   flashIntervalStep() {
     let opacity: number;
     if (this.entersDim) {

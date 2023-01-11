@@ -2,12 +2,16 @@ import Floor from './Floor/Floor';
 import Pipes from './Pipes/Pipes';
 import Player from './Player/Player';
 import { Component } from 'react';
-import { BasicHandler as CallbackHandler } from 'utils/BasicHandler';
+import { HandlerHolder } from 'utils/HandlerHolder';
 import { Rect } from 'utils/Rect';
 import './Game.scss';
 import Score from './Score/Score';
 import Background from './Background/Background';
-import DeathScreenFlash from './DeathScreenFlash/DeathScreenFlash';
+import DeathFlashScreen from './GameOverController/DeathFlashScreen/DeathFlashScreen';
+import Instructions from './Instructions/Instructions';
+import GameOverTitle from './GameOverController/GameOverTitle/GameOverTitle';
+import ScoreBoard from './ScoreBoard/ScoreBoard';
+import GameOverController from './GameOverController/GameOverController';
 
 
 
@@ -25,8 +29,9 @@ interface State {
 export default class Game extends Component<Props, State> {
 
 
-  handler_jump = new CallbackHandler();
-  handler_flash = new CallbackHandler();
+  handlerHolder_Player_jump = new HandlerHolder();
+  handlerHolder_GameOverController_setGameOver = new HandlerHolder<[score: number]>();
+  handlerHolder_Instructions_dismiss = new HandlerHolder();
 
   collisionData_pipeGates?: Rect[];
   collisionData_player?: Rect;
@@ -63,7 +68,7 @@ export default class Game extends Component<Props, State> {
           onPipesMove={(rects) => { this.collisionData_pipeGates = rects; this.checkCollision() }}
         />
         <Player
-          handler_onJump={(callback) => this.handler_jump.addCallback(callback)}
+          handler_onJump={(callback) => this.handlerHolder_Player_jump.add(callback)}
           onUpdateFlyingPos={(rect) => { this.collisionData_player = rect; this.checkCollision() }}
           onCrashFloor={() => this.endGame()}
         />
@@ -73,9 +78,14 @@ export default class Game extends Component<Props, State> {
         <Score
           score={this.state.score}
         />
-        <DeathScreenFlash
-          handler_flash={(callback) => this.handler_flash.addCallback(callback)}
+        <Instructions
+          handler_dismiss={(callback) => this.handlerHolder_Instructions_dismiss.add(callback)}
         />
+        <GameOverController
+          handler_setGameOver={(callback) => this.handlerHolder_GameOverController_setGameOver.add(callback)}
+          onRestart={() => 0}
+        />
+
       </div>
     )
   }
@@ -108,7 +118,7 @@ export default class Game extends Component<Props, State> {
 
   endGame() {
     if (this.state.phase === 'dead') return;
-    this.handler_flash.call();
+    this.handlerHolder_GameOverController_setGameOver.call(this.state.score);
     this.setState({
       phase: 'dead',
     });
@@ -116,10 +126,11 @@ export default class Game extends Component<Props, State> {
 
   onJumpAction() {
     if (this.state.phase === 'intro') {
+      this.handlerHolder_Instructions_dismiss.call();
       this.startGame();
     }
     if (this.state.phase !== 'dead') {
-      this.handler_jump.call();
+      this.handlerHolder_Player_jump.call();
     }
   }
 

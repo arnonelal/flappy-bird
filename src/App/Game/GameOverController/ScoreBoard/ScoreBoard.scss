@@ -1,0 +1,31 @@
+#ScoreBoard {
+  position: fixed;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+
+
+  ._content {
+    position: relative;
+
+
+    ._medalContainer {
+      position: absolute;
+
+      ._medal {
+        position: absolute;
+      }
+    }
+
+    ._digit+._digit {
+      margin-left: 0.3vh;
+    }
+
+    ._number {
+      position: absolute;
+      justify-content: flex-end;
+      width: 20vh;
+    }
+
+  }
+}
