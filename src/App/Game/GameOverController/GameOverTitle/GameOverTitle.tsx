@@ -14,7 +14,7 @@ interface State {
 
 export default class GameOverTitle extends Component<Props, State> {
 
-  apeearInterval = fpsIntervalController.add(() => this.animationStep());
+  apeearInterval = fpsIntervalController.set(() => this.animationStep());
 
 
   constructor(props: Props) {

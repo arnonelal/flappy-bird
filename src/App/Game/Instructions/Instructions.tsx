@@ -16,7 +16,7 @@ interface State {
 
 export default class Instructions extends Component<Props, State> {
 
-  flashInterval = fpsIntervalController.add(() => this.animationStep());
+  flashInterval = fpsIntervalController.set(() => this.animationStep());
 
 
   constructor(props: Props) {

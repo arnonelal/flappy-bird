@@ -16,7 +16,7 @@ interface State {
 
 export default class Floor extends Component<Props, State> {
 
-  movementInverval = fpsIntervalController.add((_this) => this.moveFloor(_this));
+  movementInverval = fpsIntervalController.set((_this) => this.moveFloor(_this));
 
   constructor(props: Props) {
     super(props);

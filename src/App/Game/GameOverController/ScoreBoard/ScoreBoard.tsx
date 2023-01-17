@@ -43,7 +43,7 @@ interface State {
 
 export default class ScoreBoard extends Component<Props, State> {
 
-  animationInterval = fpsIntervalController.add(() => this.animationStep());
+  animationInterval = fpsIntervalController.set(() => this.animationStep());
 
 
   constructor(props: Props) {

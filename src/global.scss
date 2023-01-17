@@ -1,4 +1,4 @@
-.notSelectable {
+.notHighlightable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -16,7 +16,7 @@
   -ms-user-select: none;
 }
 
-.backgroundImageRepeatXBase {
+.backgroundImageRepeatX {
   background-size: contain;
   background-repeat: repeat-x;
   image-rendering: pixelated;

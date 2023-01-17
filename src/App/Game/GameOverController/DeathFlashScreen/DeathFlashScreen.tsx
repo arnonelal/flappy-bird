@@ -14,7 +14,7 @@ interface State {
 
 export default class DeathFlashScreen extends Component<Props, State> {
 
-  flashInterval = fpsIntervalController.add(() => this.flashIntervalStep());
+  flashInterval = fpsIntervalController.set(() => this.flashIntervalStep());
 
 
   constructor(props: Props) {

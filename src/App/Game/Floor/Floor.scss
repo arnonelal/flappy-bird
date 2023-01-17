@@ -8,7 +8,7 @@
   display: flex;
   flex-flow: row;
 
-  @extend .backgroundImageRepeatXBase;
+  @extend .backgroundImageRepeatX;
   background-image: url('../../../assets/gameSprites/floor.png');
 
 }

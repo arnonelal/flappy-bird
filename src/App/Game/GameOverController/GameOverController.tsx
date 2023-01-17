@@ -12,7 +12,8 @@ import './GameOverController.scss';
 
 interface Props {
   handler_setGameOver: (callback: (score: number) => void) => void;
-  onRestart: () => void;
+  onPressRestart: () => void;
+  onShowGameOverTitle: () => void;
 }
 
 interface State {
@@ -62,7 +63,7 @@ export default class GameOverController extends Component<Props, State> {
         {this.state.phase >= 4 ?
 
           <Buttons
-            onClick_restart={() => this.props.onRestart()}
+            onClick_restart={() => this.props.onPressRestart()}
             onClick_share={() => openSharePage()}
             onCLick_addToLeaderboard={() => redirectToScoreSubmittionPage()}
           /> : null
@@ -75,6 +76,7 @@ export default class GameOverController extends Component<Props, State> {
     this.setState({ phase: 1 });
     setTimeout(() => {
       this.setState({ phase: 2 });
+      this.props.onShowGameOverTitle();
       setTimeout(() => {
         this.setState({ phase: 3 });
         setTimeout(() => {

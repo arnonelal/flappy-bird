@@ -20,8 +20,8 @@ interface State {
 
 export default class Player extends Component<Props, State> {
 
-  glideInverval = fpsIntervalController.add((_this) => this.glideStep(_this));
-  flyInverval = fpsIntervalController.add((_this) => this.flyStep(_this));
+  glideInverval = fpsIntervalController.set((_this) => this.glideStep(_this));
+  flyInverval = fpsIntervalController.set((_this) => this.flyStep(_this));
 
   playerSpeed = 0;
 

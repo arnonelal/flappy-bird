@@ -11,6 +11,7 @@ export const GameConsts = {
     minTopVh: -57,
     maxTopVh: -20,
     distanceVh: 60,
+    speed: 30, //vh/sec //needs to be the same as floor.speed
   },
   player: {
     diameterVh: 12 * vhScaleFactor,

@@ -8,11 +8,10 @@ const bgs = [bg0, bg1];
 
 
 interface Props {
-  graphicsSeed: number; //between 0-1
+  randomSeedForGraphics: number; //between 0-1
 }
 
 interface State {
-
 }
 
 export default class Background extends Component<Props, State> {
@@ -26,7 +25,7 @@ export default class Background extends Component<Props, State> {
 
 
   render() {
-    const bgSrc = getItemFromSeed(bgs, this.props.graphicsSeed);
+    const bgSrc = getItemFromSeed(bgs, this.props.randomSeedForGraphics);
 
     return (
       <div

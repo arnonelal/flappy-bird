@@ -3,16 +3,15 @@
 #App {
   width: 100vw;
   height: 100vh;
-  display: flex;
   align-items: center;
   justify-content: center;
   outline: none; //to prevent outline because of tabIndex={-1}
 
-  @extend .notSelectable;
+  @extend .notHighlightable;
 }
 
 img {
-  image-rendering: pixelated;
+  image-rendering: pixelated; //todo will maybe be changed if maximizing the image sizes again
 
   @extend .notDraggable;
 }

@@ -14,7 +14,7 @@ export class FpsIntervalController {
 
 
 
-  public add(callback: Callback): FpsInterval {
+  public set(callback: Callback): FpsInterval {
     const id = this.currentId++;
     this.callbacksInQueue.set(id, callback);
     return new FpsInterval(this, id);

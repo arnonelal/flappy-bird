@@ -1,12 +1,13 @@
 import { Component } from 'react';
-import { FpsIntervalController, fpsIntervalController } from 'utils/fpsIntervalController';
+import { fpsIntervalController } from 'utils/fpsIntervalController';
 import { GameConsts } from 'utils/GameConsts';
+import { Timeout } from 'utils/Timeout';
 import './BlackTransitionScreen.scss';
 
 
 
 interface Props {
-  handler_transit: (callback: (onFinishCover: Promise<void>) => void) => void
+  handler_startTransition: (callback: (onFinishCover: () => void) => void) => void
 }
 
 interface State {
@@ -15,7 +16,11 @@ interface State {
 
 export default class BlackTransitionScreen extends Component<Props, State> {
 
-  flashInterval = fpsIntervalController.add(() => this.flashIntervalStep());
+  animation_dim_interval = fpsIntervalController.set(() => this.animation_dim_step());
+  animation_fade_interval = fpsIntervalController.set(() => this.animation_fade_step());
+  animation_timeout?: Timeout;
+  animation_onFinishCover_callback?: () => void;
+  animation_isRunning = false;
 
 
   constructor(props: Props) {
@@ -26,11 +31,14 @@ export default class BlackTransitionScreen extends Component<Props, State> {
   }
 
   componentDidMount(): void {
-    this.flashInterval.start();
+    //config handlers
+    this.props.handler_startTransition((onFinishCover) => this.startTransition(onFinishCover));
   }
 
   componentWillUnmount(): void {
-    this.flashInterval.stop();
+    this.animation_dim_interval.stop();
+    this.animation_fade_interval.stop();
+    this.animation_timeout?.stop();
   }
 
 
@@ -45,28 +53,40 @@ export default class BlackTransitionScreen extends Component<Props, State> {
   }
 
 
-  entersDim = true;
-  flashIntervalStep() {
-    let opacity: number;
-    if (this.entersDim) {
-      opacity = this.state.opacity + (6 / GameConsts.fps);
-      if (opacity >= 1) {
-        opacity = 1;
-        this.entersDim = false;
-      }
-    } else {
-      opacity = this.state.opacity - (3 / GameConsts.fps);
-      if (opacity <= 0) {
-        opacity = 0;
-        this.entersDim = true;
-        this.flashInterval.stop();
-      }
-    }
+  startTransition(onFinishCover: () => void) {
+    if (this.animation_isRunning) return;
+    this.animation_isRunning = true;
+    this.animation_onFinishCover_callback = onFinishCover;
+    this.animation_dim_interval.start();
+  }
 
+
+  animation_dim_step() {
+    let opacity = this.state.opacity;
+    if (opacity >= 1) {
+      opacity = 1;
+      this.animation_dim_interval.stop();
+      this.animation_timeout = new Timeout(200, () => {
+        this.animation_onFinishCover_callback?.();
+        this.animation_fade_interval.start();
+      }
+      );
+    }
+    opacity += (3 / GameConsts.fps);
     this.setState({ opacity });
   }
+
+  animation_fade_step() {
+    let opacity = this.state.opacity - (3 / GameConsts.fps);
+    if (opacity <= 0) {
+      opacity = 0;
+      this.animation_fade_interval.stop();
+      this.animation_isRunning = false;
+    }
+    this.setState({ opacity });
+  }
+
+
 }
 
-
-const dimPerSec = 2;
 

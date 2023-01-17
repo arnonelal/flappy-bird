@@ -8,7 +8,7 @@ import { FpsIntervalController, fpsIntervalController } from 'utils/fpsIntervalC
 
 interface Props {
   isMoving: boolean,
-  onPipesMove: (gates: Rect[]) => void,
+  onPipesMove: (gatesLocation: Rect[]) => void,
 }
 
 interface State {
@@ -25,7 +25,7 @@ interface PipeData {
 
 export default class Pipes extends Component<Props, State> {
 
-  movePipesInterval = fpsIntervalController.add((_this) => this.movePipes(_this));
+  movePipesInterval = fpsIntervalController.set((_this) => this.movePipes(_this));
 
   currentPipePos: number = 0;
 
@@ -43,7 +43,7 @@ export default class Pipes extends Component<Props, State> {
     this.updateStartingPipePos();
     window.addEventListener('resize', () => this.updateStartingPipePos());
 
-    this.setMovingPipesInterval();
+    this.updateMovingPipesInterval();
   }
 
   componentWillUnmount(): void {
@@ -52,24 +52,14 @@ export default class Pipes extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
     if (prevProps.isMoving !== this.props.isMoving) {
-      this.setMovingPipesInterval();
+      this.updateMovingPipesInterval();
     }
     if (prevState.pipesXPos !== this.state.pipesXPos) {
       this.notifyOnGatesMove(this.state.pipesXPos, this.state.pipesData);
     }
   }
 
-  setMovingPipesInterval() {
-    if (this.props.isMoving) {
-      this.movePipesInterval.start();
-    } else {
-      this.movePipesInterval.stop();
-    }
-  }
-
-
   render() {
-
     return (
       <div id='Pipes' style={{ left: this.state.pipesXPos + 'vh' }}>
         {this.state.startingPipeIndex === 0 ? [] : this.state.pipesData.map((pipeData, i) => {
@@ -82,11 +72,18 @@ export default class Pipes extends Component<Props, State> {
           );
         })}
       </div>
-    )
+    );
   }
 
+  private updateMovingPipesInterval() {
+    if (this.props.isMoving) {
+      this.movePipesInterval.start();
+    } else {
+      this.movePipesInterval.stop();
+    }
+  }
 
-  updateStartingPipePos() {
+  private updateStartingPipePos() {
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
@@ -99,7 +96,7 @@ export default class Pipes extends Component<Props, State> {
   }
 
 
-  reducePipes() {
+  private reducePipes() {
     let pipes = [...this.state.pipesData]; //create a clone array so the state will update correctly. it doesnt matter that the items remain the same objects
 
     pipes.forEach(pipe => {
@@ -122,8 +119,8 @@ export default class Pipes extends Component<Props, State> {
 
   }
 
-  movePipes(interval: FpsIntervalController) {
-    let newXPos = this.state.pipesXPos - (pipesSpeed / GameConsts.fps);
+  private movePipes(interval: FpsIntervalController) {
+    let newXPos = this.state.pipesXPos - (GameConsts.pipe.speed / GameConsts.fps);
     if (newXPos <= -GameConsts.pipe.distanceVh) {
       newXPos += GameConsts.pipe.distanceVh;
       this.reducePipes();
@@ -131,7 +128,7 @@ export default class Pipes extends Component<Props, State> {
     this.setState({ pipesXPos: newXPos });
   }
 
-  notifyOnGatesMove(pipesXPos: number, pipes: PipeData[]) {
+  private notifyOnGatesMove(pipesXPos: number, pipes: PipeData[]) {
 
     function getGateAreaForPipe(pipe: PipeData): Rect {
       const x1 = (pipe.index * GameConsts.pipe.distanceVh) + pipesXPos;
@@ -160,15 +157,7 @@ const cLosestPipesToPlayer = (() => {
   return [firstPipe, firstPipe + 1];
 })();
 
-const pipeScoringPosition: { pipeIndex: number, pipeContainerXPos: number } = (() => {
-  const playerXPos = GameConsts.player.leftVh;
-  const distance = GameConsts.pipe.distanceVh;
-  const pipeIndex = Math.floor(playerXPos / distance);
-  const xPos = -(playerXPos % distance);
-  return { pipeIndex, pipeContainerXPos: xPos };
-})()
 
-const pipesSpeed = GameConsts.floor.speed; //vh/sec //todo change
 
 function getPipeYPos(yPosAsPct: number) {
   return GameConsts.pipe.minTopVh + (GameConsts.pipe.maxTopVh - GameConsts.pipe.minTopVh) * (yPosAsPct / 100);
