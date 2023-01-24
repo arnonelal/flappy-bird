@@ -9,7 +9,7 @@ import Score from './Score/Score';
 import Background from './Background/Background';
 import Instructions from './Instructions/Instructions';
 import GameOverController from './GameOverController/GameOverController';
-import BlackTransitionScreen from 'App/BlackTransitionScreen/BlackTransitionScreen';
+import BlackTransitionScreen from 'components/BlackTransitionScreen/BlackTransitionScreen';
 
 
 

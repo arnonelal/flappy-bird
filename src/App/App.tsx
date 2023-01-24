@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { HandlerHolder } from 'utils/HandlerHolder';
 import './App.scss';
-import BlackTransitionScreen from './BlackTransitionScreen/BlackTransitionScreen';
+import BlackTransitionScreen from '../components/BlackTransitionScreen/BlackTransitionScreen';
 import Game from './Game/Game';
 
 
