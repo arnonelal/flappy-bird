@@ -49,7 +49,10 @@ export class FpsIntervalController {
 
 
   private step() {
-    this.callbacksRunning.forEach(callback => callback(this));
+    requestAnimationFrame(() =>
+      this.callbacksRunning.forEach(callback => callback(this))
+    );
+
   }
 }
 

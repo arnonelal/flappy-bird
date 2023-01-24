@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { fpsIntervalController } from 'utils/fpsIntervalController';
 import './PlayerGraphic.scss';
 import PlayerMovingSprite from './PlayerMovingSprite/PlayerMovingSprite';
-import Timeout from 'util/Timeout'
+import { Timeout } from 'utils/Timeout';
 
 
 interface Props {
@@ -54,40 +54,37 @@ export default class PlayerGraphic extends Component<Props, State> {
 
   stopIntervals() {
     this.animationInterval_phase0.stop();
-    clearTimeout(this.animationTimeout_phase1);
+    this.animationTimeout_phase1?.stop();
     this.animationInterval_phase2.stop();
   }
 
 
   animationStep_phase0() {
     let newRotation = this.state.playerRotation - (400 / this.props.fps);
-    if (newRotation <= -25) {
+    if (newRotation <= -16) {
+      newRotation = -16;
+
       this.animationInterval_phase0.stop();
-      this
-      this.animationInterval_phase1.start();
-      newRotation = -25;
+      this.animationTimeout_phase1 = new Timeout(500, () => this.animationTimeoutCallback_phase1());
     }
     this.setState({ playerRotation: newRotation })
   }
 
-
-  animationStep_phase1() {
-    this.movementInverval = setInterval(() => {
-      clearInterval(this.movementInverval);
-      this.setState({ isPlayerFlappingWings: false });
-      this.animationStep_phase2();
-    }, 800);
+  animationTimeoutCallback_phase1() {
+    this.setState({ isPlayerFlappingWings: false });
+    this.animationSpeed_phase2 = 0;
+    this.animationInterval_phase2.start();
   }
 
+  animationSpeed_phase2 = 150;
   animationStep_phase2() {
-    this.movementInverval = setInterval(() => {
-      let newRotation = this.state.playerRotation + (300 / this.props.fps);
-      if (newRotation >= 90) {
-        clearInterval(this.movementInverval);
-        newRotation = 90;
-      }
-      this.setState({ playerRotation: newRotation });
-    }, 1000 / this.props.fps);
+    this.animationSpeed_phase2 += 1000 / this.props.fps;
+    let newRotation = this.state.playerRotation + (this.animationSpeed_phase2 / this.props.fps);
+    if (newRotation >= 90) {
+      this.animationInterval_phase2.stop();
+      newRotation = 90;
+    }
+    this.setState({ playerRotation: newRotation });
   }
 
 }

@@ -7,10 +7,10 @@ export const GameConsts = {
   pipe: {
     pipeWidthVh: 26 * vhScaleFactor,
     segmentHeightVh: 160 * vhScaleFactor,
-    gateHeightVh: 30,
+    gateHeightVh: 24,
     minTopVh: -57,
     maxTopVh: -20,
-    distanceVh: 60,
+    distanceVh: 40,
     speed: 30, //vh/sec //needs to be the same as floor.speed
   },
   player: {
@@ -18,7 +18,7 @@ export const GameConsts = {
     leftVh: 30,
     flyingMechanics: {
       gravity: 180, //vh/sec^2
-      jumpVelocity: -70, //vh/sec
+      jumpVelocity: -65, //vh/sec
 
     },
     glidingMechanics: {
