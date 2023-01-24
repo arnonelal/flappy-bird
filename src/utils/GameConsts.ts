@@ -3,7 +3,6 @@ export const vhScaleFactor = (100 / 256);
 
 export const GameConsts = {
   fps: 60,
-  playingPlayerLeftPositionVh: 30,
   pipe: {
     pipeWidthVh: 26 * vhScaleFactor,
     segmentHeightVh: 160 * vhScaleFactor,
@@ -15,7 +14,7 @@ export const GameConsts = {
   },
   player: {
     diameterVh: 12 * vhScaleFactor,
-    leftVh: 30,
+    leftVh: 10,
     flyingMechanics: {
       gravity: 180, //vh/sec^2
       jumpVelocity: -65, //vh/sec
