@@ -1,78 +1,61 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useRef, useState } from 'react';
 import { HandlerHolder } from 'utils/HandlerHolder';
 import './App.scss';
 import BlackTransitionScreen from '../components/BlackTransitionScreen/BlackTransitionScreen';
 import Game from './Game/Game';
-
-
-interface Props {
-}
-
-interface State {
-  gameComponentKey: number;
-}
-
-
-export default class App extends Component<Props, State> {
-
-  handlerHolder_BlackTransitionScreen_startTransition = new HandlerHolder<[completion: () => void]>();
-  handlerHolder_Game_jump = new HandlerHolder();
-
-  containerRef: React.RefObject<HTMLDivElement>;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      gameComponentKey: 0, //for restarting Game component
-    };
-    this.containerRef = React.createRef();
-  }
-
-  componentDidMount() {
-    this.focusContainer();
-  }
-
-  render() {
-    return (
-      <div
-        id="App"
-        ref={this.containerRef}
-        tabIndex={-1} //for onKeyDown to work
-        onMouseDown={() => this.onMouseDown()}
-        onKeyDown={(e) => this.onKeyDown(e)}
-        onBlur={() => this.focusContainer()}
-      >
-        <Game
-          handler_jump={(callback) => this.handlerHolder_Game_jump.add(callback)}
-          onPressRestart={() => this.restartGame()}
-          key={this.state.gameComponentKey}
-        />
-        <BlackTransitionScreen
-          handler_startTransition={(callback) => this.handlerHolder_BlackTransitionScreen_startTransition.add(callback)}
-        />
-      </div>
-    );
-  }
+import { useHandlerHolder } from 'utils/hooks/useHandlerHolder';
 
 
 
-  private onMouseDown() {
-    this.handlerHolder_Game_jump.call();
-  }
 
-  private onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.code === 'Space') {
-      this.handlerHolder_Game_jump.call();
-    }
-  }
+export default function App() {
 
-  private restartGame() {
-    this.handlerHolder_BlackTransitionScreen_startTransition.call(() => {
-      this.setState({ gameComponentKey: this.state.gameComponentKey + 1 });
+  const handlerHolder_BlackTransitionScreen_startTransition = useHandlerHolder<[completion: () => void]>();
+  const handlerHolder_Game_jump = useHandlerHolder();
+
+  const containerRef = useRef<HTMLDivElement>();
+
+  const [gameComponentKey, setGameComponentKey] = useState(0);
+
+
+
+  function restartGame() {
+    handlerHolder_BlackTransitionScreen_startTransition.call(() => {
+      setGameComponentKey(value => value + 1);
     });
   }
 
-  private focusContainer() {
-    this.containerRef.current?.focus();
+  function focusContainer() {
+    containerRef.current?.focus();
   }
+
+
+
+  useEffect(() => {
+    focusContainer();
+  }, []);
+
+
+
+
+
+  return (
+    <div
+      id="App"
+      ref={(ref) => containerRef.current = ref ?? undefined}
+      tabIndex={-1} //for onKeyDown to work
+      onMouseDown={() => handlerHolder_Game_jump.call()}
+      onKeyDown={(e) => (e.code === 'Space') && handlerHolder_Game_jump.call()}
+      onBlur={() => focusContainer()}
+    >
+      <Game
+        handler_jump={(callback) => handlerHolder_Game_jump.add(callback)}
+        onPressRestart={() => restartGame()}
+        key={gameComponentKey}
+      />
+      <BlackTransitionScreen
+        handler_startTransition={(callback) => handlerHolder_BlackTransitionScreen_startTransition.add(callback)}
+      />
+    </div>
+  );
 }
