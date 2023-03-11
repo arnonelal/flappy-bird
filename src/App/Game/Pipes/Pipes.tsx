@@ -84,6 +84,7 @@ export default class Pipes extends Component<Props, State> {
   }
 
   private updateStartingPipePos() {
+    console.log('a');
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
 
@@ -97,6 +98,7 @@ export default class Pipes extends Component<Props, State> {
 
 
   private reducePipes() {
+    console.log('reduce');
     let pipes = [...this.state.pipesData]; //create a clone array so the state will update correctly. it doesnt matter that the items remain the same objects
 
     pipes.forEach(pipe => {

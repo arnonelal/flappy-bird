@@ -3,6 +3,10 @@ import { HandlerHolder } from 'utils/HandlerHolder';
 import './App.scss';
 import BlackTransitionScreen from '../components/BlackTransitionScreen/BlackTransitionScreen';
 import Game from './Game/Game';
+import 'assets/fonts/flappy.ttf';
+import ContentBox from 'App/Game/LeaderboardController/LeaderboardScreen/Table/ContentBox/ContentBox';
+import Table from 'App/Game/LeaderboardController/LeaderboardScreen/Table/Table';
+
 
 
 interface Props {
@@ -29,7 +33,7 @@ export default class App extends Component<Props, State> {
   }
 
   componentDidMount() {
-    this.focusContainer();
+    this.tryToFocusContainer();
   }
 
   render() {
@@ -40,7 +44,7 @@ export default class App extends Component<Props, State> {
         tabIndex={-1} //for onKeyDown to work
         onMouseDown={() => this.onMouseDown()}
         onKeyDown={(e) => this.onKeyDown(e)}
-        onBlur={() => this.focusContainer()}
+        onBlur={() => this.tryToFocusContainer()}
       >
         <Game
           handler_jump={(callback) => this.handlerHolder_Game_jump.add(callback)}
@@ -50,10 +54,11 @@ export default class App extends Component<Props, State> {
         <BlackTransitionScreen
           handler_startTransition={(callback) => this.handlerHolder_BlackTransitionScreen_startTransition.add(callback)}
         />
+        {/* <Table /> */}
+        {/* <button onClick={() => this.foo()}>sdfdsf</button> */}
       </div>
     );
   }
-
 
 
   private onMouseDown() {
@@ -72,7 +77,13 @@ export default class App extends Component<Props, State> {
     });
   }
 
-  private focusContainer() {
-    this.containerRef.current?.focus();
+  private tryToFocusContainer() {
+    setTimeout(() => {
+      if (document.activeElement?.tagName.toLowerCase() === 'input') {
+        return;
+      }
+      this.containerRef.current?.focus();
+    }, 1);
+
   }
 }

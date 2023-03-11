@@ -1,0 +1,17 @@
+#LeaderboardScreen {
+  position: fixed;
+  width: 100vw;
+  flex-flow: column;
+  align-items: center;
+
+  &>h1 {
+    font-size: 8vh;
+    margin: 2vh;
+  }
+
+  &>h2 {
+    font-size: 6vh;
+    margin: 2vh;
+    margin-bottom: 4vh;
+  }
+}

@@ -1,0 +1,35 @@
+#HighscoreLoader {
+  flex-grow: 1;
+
+  ._placeholder {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ._entriesTable {
+    flex-flow: column;
+    flex-grow: 1;
+    font-size: 4.5vh;
+
+    &>._entry {
+      flex-flow: column;
+
+      &>._entryContent {
+        flex-grow: 1;
+
+        &>._name {
+          flex-grow: 1;
+        }
+
+      }
+
+      &>._seperator {
+        margin: 1vh 0;
+        height: 0.4vh;
+        background-color: #d3ce8f;
+        flex-grow: 1;
+      }
+    }
+  }
+}

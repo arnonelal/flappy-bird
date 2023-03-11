@@ -6,8 +6,10 @@
   align-items: center;
   justify-content: center;
   outline: none; //to prevent outline because of tabIndex={-1}
+  font-family: "Flappy";
 
   @extend .notHighlightable;
+
 }
 
 img {
@@ -23,4 +25,11 @@ div {
 button {
   @extend .noStyleButton;
   display: flex;
+}
+
+
+@font-face {
+  font-family: "Flappy";
+  src: local("Flappy"),
+    url("../assets/fonts/flappy.ttf") format("truetype");
 }

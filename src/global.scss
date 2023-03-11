@@ -22,6 +22,12 @@
   image-rendering: pixelated;
 }
 
+.backgroundImageRepeatY {
+  background-size: contain;
+  background-repeat: repeat-y;
+  image-rendering: pixelated;
+}
+
 .noStyleButton {
   background: none;
   color: inherit;

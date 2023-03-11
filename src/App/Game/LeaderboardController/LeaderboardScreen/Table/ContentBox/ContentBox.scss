@@ -1,0 +1,34 @@
+@use "../../../../../../global.scss";
+
+
+#ContentBox {
+  position: relative;
+
+  ._scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: #c2c2c2 #000000;
+  }
+
+  ._scrollbar::-webkit-scrollbar {
+    width: 1vh;
+  }
+
+  ._scrollbar::-webkit-scrollbar-track {
+    background: #00000000;
+  }
+
+  ._scrollbar::-webkit-scrollbar-thumb {
+    background-color: #b8b386;
+    border-radius: 10px;
+  }
+
+  ._edge-top {
+    @extend .backgroundImageRepeatX;
+    background-image: url('../../../../../../assets/gameSprites/leaderboards/edges/top.png');
+  }
+
+  ._edge-vertical {
+    @extend .backgroundImageRepeatY;
+    background-image: url('../../../../../../assets/gameSprites/leaderboards/edges/vertical.png');
+  }
+}

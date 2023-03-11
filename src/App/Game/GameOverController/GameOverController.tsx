@@ -1,23 +1,25 @@
 import { Component } from 'react';
 import { Cookies } from 'react-cookie';
-import { openSharePage, redirectToScoreSubmittionPage } from 'utils/openUrls';
 import DeathFlashScreen from './DeathFlashScreen/DeathFlashScreen';
 import GameOverTitle from './GameOverTitle/GameOverTitle';
 import ScoreBoard from './ScoreBoard/ScoreBoard';
 import Buttons from './Buttons/Buttons';
 import './GameOverController.scss';
+import { HandlerHolder } from 'utils/HandlerHolder';
 
 
 
 
 interface Props {
   handler_setGameOver: (callback: (score: number) => void) => void;
-  onPressRestart: () => void;
+  onClick_restart: () => void;
+  onClick_share: () => void;
   onShowGameOverTitle: () => void;
+  onReadyToRevealLeaderboardFlow: () => void
 }
 
 interface State {
-  phase: number; //0-4 0-inactive | 1-deathflash | 2-title | 3-scoreboard | 4-scoreAndButtons
+  phase: number; //0-inactive | 1-deathflash | 2-title | 3-scoreboard | 4-scoreAndButtons | 5-concealing
   scoreData: {
     score: number,
     highscore: number,
@@ -28,6 +30,7 @@ interface State {
 
 export default class GameOverController extends Component<Props, State> {
 
+  handlerHolder_Scoreboard_conceal = new HandlerHolder();
 
   constructor(props: Props) {
     super(props);
@@ -48,7 +51,7 @@ export default class GameOverController extends Component<Props, State> {
           <DeathFlashScreen
           /> : null
         }
-        {this.state.phase >= 2 ?
+        {this.state.phase >= 2 && this.state.phase !== 5 ?
           <GameOverTitle
           /> : null
         }
@@ -58,14 +61,15 @@ export default class GameOverController extends Component<Props, State> {
             highscore={this.state.scoreData?.highscore ?? null}
             isNewHighscore={this.state.scoreData?.isNewHighscore ?? false}
             medal={this.state.scoreData?.medal ?? null}
+            handler_conceal={(callback) => this.handlerHolder_Scoreboard_conceal.add(callback)}
           /> : null
         }
-        {this.state.phase >= 4 ?
+        {this.state.phase === 4 ?
 
           <Buttons
-            onClick_restart={() => this.props.onPressRestart()}
-            onClick_share={() => openSharePage()}
-            onCLick_addToLeaderboard={() => redirectToScoreSubmittionPage()}
+            onClick_restart={() => this.props.onClick_restart()}
+            onClick_share={() => this.props.onClick_share()}
+            onCLick_addToLeaderboard={() => this.conceal()}
           /> : null
         }
       </div>
@@ -123,5 +127,11 @@ export default class GameOverController extends Component<Props, State> {
         medal,
       }
     });
+  }
+
+  conceal() {
+    this.handlerHolder_Scoreboard_conceal.call();
+    this.setState({ phase: 5 });
+    setTimeout(() => this.props.onReadyToRevealLeaderboardFlow(), 600);
   }
 }

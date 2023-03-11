@@ -34,6 +34,7 @@ interface Props {
   highscore: number | null;
   isNewHighscore: boolean;
   medal: 'bronze' | 'silver' | 'gold' | 'platinum' | null;
+  handler_conceal: (callback: () => void) => void;
 }
 
 interface State {
@@ -45,12 +46,17 @@ export default class ScoreBoard extends Component<Props, State> {
 
   animationInterval = fpsIntervalController.set(() => this.animationStep());
 
+  isConcealing = false;
+
 
   constructor(props: Props) {
     super(props);
     this.state = {
       animationRevealPct: 0,
     };
+
+    //config props
+    props.handler_conceal(() => this.conceal());
   }
 
   componentDidMount(): void {
@@ -63,15 +69,11 @@ export default class ScoreBoard extends Component<Props, State> {
 
   render() {
 
-    const scoreDigits = this.props.score === null ? null : generateNumberFromDigits(digits, this.props.score);
-    const highscoreDigits = this.props.highscore === null ? null : generateNumberFromDigits(digits, this.props.highscore);
-
-
     return (
       <div
         id='ScoreBoard'
         style={{
-          top: 100 - (62 * InOutQuadBlend(this.state.animationRevealPct)) + 'vh',
+          top: 100 - (62 * InOutQuadBlend(this.isConcealing ? 1 - this.state.animationRevealPct : this.state.animationRevealPct)) + 'vh',
         }}
       >
         <div className='_content'>
@@ -129,6 +131,12 @@ export default class ScoreBoard extends Component<Props, State> {
     this.setState({
       animationRevealPct: pct,
     });
+  }
+
+  conceal() {
+    this.setState({ animationRevealPct: 0 });
+    this.isConcealing = true;
+    this.animationInterval.start();
   }
 }
 

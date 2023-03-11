@@ -5,7 +5,7 @@ import './Buttons.scss';
 import imgSrc_button_restart from 'assets/gameSprites/scoreboard/buttons/restart.png';
 import imgSrc_button_share from 'assets/gameSprites/scoreboard/buttons/share.png';
 import imgSrc_button_addToLeaderboard from 'assets/gameSprites/scoreboard/buttons/add-to-leaderboard.png';
-import { scaledPxToVh as getVhByScaledPx } from 'utils/getVhByScaledPx';
+import { scaledPxToVh } from 'utils/getVhByScaledPx';
 
 
 
@@ -40,7 +40,7 @@ export default class Buttons extends Component<Props, State> {
               <img
                 src={imgSrc_button_restart}
                 style={{
-                  height: getVhByScaledPx(14),
+                  height: scaledPxToVh(14),
                 }}
                 alt=""
               />
@@ -48,13 +48,13 @@ export default class Buttons extends Component<Props, State> {
             <button
               onClick={() => this.props.onClick_share()}
               style={{
-                marginLeft: getVhByScaledPx(6),
+                marginLeft: scaledPxToVh(6),
               }}
             >
               <img
                 src={imgSrc_button_share}
                 style={{
-                  height: getVhByScaledPx(14),
+                  height: scaledPxToVh(14),
                 }}
                 alt=""
               />
@@ -64,13 +64,13 @@ export default class Buttons extends Component<Props, State> {
             <button
               onClick={() => this.props.onCLick_addToLeaderboard()}
               style={{
-                marginTop: getVhByScaledPx(4),
+                marginTop: scaledPxToVh(4),
               }}
             >
               <img
                 src={imgSrc_button_addToLeaderboard}
                 style={{
-                  height: getVhByScaledPx(14),
+                  height: scaledPxToVh(14),
                 }}
                 alt=""
               />

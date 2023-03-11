@@ -10,6 +10,8 @@ import Background from './Background/Background';
 import Instructions from './Instructions/Instructions';
 import GameOverController from './GameOverController/GameOverController';
 import BlackTransitionScreen from 'components/BlackTransitionScreen/BlackTransitionScreen';
+import LeaderboardController from './LeaderboardController/LeaderboardController';
+import { openSharePage } from 'utils/fetch';
 
 
 
@@ -31,6 +33,8 @@ export default class Game extends Component<Props, State> {
   handlerHolder_Player_jump = new HandlerHolder();
   handlerHolder_GameOverController_setGameOver = new HandlerHolder<[score: number]>(); //todo initiateGameOver
   handlerHolder_Instructions_dismiss = new HandlerHolder();
+  handlerHolder_LeaderboardController_startFlow = new HandlerHolder();
+
 
   playerPipeCollisionData_GatesLocation?: Rect[];
   playerPipeCollisionData_playerLocation?: Rect;
@@ -83,7 +87,15 @@ export default class Game extends Component<Props, State> {
         <GameOverController
           handler_setGameOver={(callback) => this.handlerHolder_GameOverController_setGameOver.add(callback)}
           onShowGameOverTitle={() => this.setState({ isMainScoreCompShowing: false })}
-          onPressRestart={() => this.props.onPressRestart()}
+          onClick_restart={() => this.props.onPressRestart()}
+          onClick_share={() => openSharePage()}
+          onReadyToRevealLeaderboardFlow={() => this.handlerHolder_LeaderboardController_startFlow.call()}
+        />
+        <LeaderboardController
+          handler_startFlow={(callback) => this.handlerHolder_LeaderboardController_startFlow.add(callback)}
+          score={this.state.score}
+          onClick_restart={() => this.props.onPressRestart()}
+          onClick_share={() => openSharePage()}
         />
       </div>
     )
