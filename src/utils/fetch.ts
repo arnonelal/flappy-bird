@@ -1,11 +1,5 @@
 import { encrypt } from "./encrypt";
 
-export function redirectToScoreSubmittionPage() {
-  //fetch thingy here, and then-
-  alert('notImplemented');
-  // window.open("https://www.google.com", "_top");
-}
-
 export function openSharePage() {
   //fetch thingy here, and then-
   alert('notImplemented');
@@ -24,8 +18,6 @@ export function submitHighscore(name: string, score: number): Promise<boolean> {
     });
 }
 
-export type HighscoreEntry = { name: string, score: number };
-
 export function getTopHighscores(): Promise<HighscoreEntry[] | null> {
   return fetch(serverBaseUrl + 'h' + 's' + '/', { method: 'GET' })
     .then(res => res.json())
@@ -34,6 +26,7 @@ export function getTopHighscores(): Promise<HighscoreEntry[] | null> {
     });
 }
 
+export type HighscoreEntry = { name: string, score: number };
 
 
 

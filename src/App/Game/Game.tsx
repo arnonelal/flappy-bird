@@ -1,7 +1,7 @@
 import Floor from './Floor/Floor';
 import Pipes from './Pipes/Pipes';
 import Player from './Player/Player';
-import { Component } from 'react';
+import { Component, useEffect, useMemo, useRef } from 'react';
 import { HandlerHolder } from 'utils/HandlerHolder';
 import { Rect } from 'utils/Rect';
 import './Game.scss';
@@ -9,9 +9,11 @@ import Score from './Score/Score';
 import Background from './Background/Background';
 import Instructions from './Instructions/Instructions';
 import GameOverController from './GameOverController/GameOverController';
-import BlackTransitionScreen from 'components/BlackTransitionScreen/BlackTransitionScreen';
 import LeaderboardController from './LeaderboardController/LeaderboardController';
 import { openSharePage } from 'utils/fetch';
+import { useLazyRef } from 'hooks/useLazyRef';
+import { useMergedState } from 'hooks/useMergedState';
+import { useChanged } from 'hooks/useChanged';
 
 
 
@@ -23,129 +25,129 @@ interface Props {
 interface State {
   phase: 'intro' | 'onGame' | 'dead';
   score: number;
-  isMainScoreCompShowing: boolean;
+  isMainScoreComponentShowing: boolean;
   playerGatePhase: 'entering' | 'inside' | 'leavingOrOutside'; //'gate' is the gap between the pipes
 }
 
-export default class Game extends Component<Props, State> {
+export default function Game(props: Props) {
 
 
-  handlerHolder_Player_jump = new HandlerHolder();
-  handlerHolder_GameOverController_setGameOver = new HandlerHolder<[score: number]>(); //todo initiateGameOver
-  handlerHolder_Instructions_dismiss = new HandlerHolder();
-  handlerHolder_LeaderboardController_startFlow = new HandlerHolder();
+  const handlerHolder_Player_jump = useLazyRef(() => new HandlerHolder());
+  const handlerHolder_GameOverController_setGameOver = useLazyRef(() => new HandlerHolder<[score: number]>()); //todo initiateGameOver
+  const handlerHolder_Instructions_dismiss = useLazyRef(() => new HandlerHolder());
+  const handlerHolder_LeaderboardController_startFlow = useLazyRef(() => new HandlerHolder());
 
 
-  playerPipeCollisionData_GatesLocation?: Rect[];
-  playerPipeCollisionData_playerLocation?: Rect;
+  const playerPipeCollisionData_GatesLocation = useRef<Rect[]>();
+  const playerPipeCollisionData_playerLocation = useRef<Rect>();
 
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      phase: 'intro',
-      playerGatePhase: 'leavingOrOutside',
-      score: 0,
-      isMainScoreCompShowing: true,
-    };
+  function checkPlayerAndGatesCollision() {
+    if (playerPipeCollisionData_GatesLocation.current === undefined || playerPipeCollisionData_playerLocation.current === undefined) return;
+    if (state.phase !== 'onGame') return;
 
-    //init handlers
-    this.props.handler_jump(() => this.onJumpAction());
-  }
+    const player = playerPipeCollisionData_playerLocation.current;
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
-    if (prevState.playerGatePhase === 'entering' && (this.state.playerGatePhase === 'inside' || this.state.playerGatePhase === 'leavingOrOutside')) {
-      this.setState({ score: this.state.score + 1 });
-    }
-  }
-
-  render() {
-    return (
-      <div id='Game'>
-        <Background randomSeedForGraphics={0} />
-
-        <Pipes
-          isMoving={this.state.phase === 'onGame'}
-          onPipesMove={(gatesLocation) => { this.playerPipeCollisionData_GatesLocation = gatesLocation; this.checkPlayerAndGatesCollision() }}
-        />
-        <Player
-          handler_onJump={(callback) => this.handlerHolder_Player_jump.add(callback)}
-          onUpdateFlyingPos={(rect) => { this.playerPipeCollisionData_playerLocation = rect; this.checkPlayerAndGatesCollision() }}
-          onCrashFloor={() => this.endGame()}
-        />
-        <Floor
-          isMoving={this.state.phase !== 'dead'}
-        />
-        {this.state.isMainScoreCompShowing ?
-          <Score
-            score={this.state.score}
-          />
-          : null}
-        <Instructions
-          handler_dismiss={(callback) => this.handlerHolder_Instructions_dismiss.add(callback)}
-        />
-        <GameOverController
-          handler_setGameOver={(callback) => this.handlerHolder_GameOverController_setGameOver.add(callback)}
-          onShowGameOverTitle={() => this.setState({ isMainScoreCompShowing: false })}
-          onClick_restart={() => this.props.onPressRestart()}
-          onClick_share={() => openSharePage()}
-          onReadyToRevealLeaderboardFlow={() => this.handlerHolder_LeaderboardController_startFlow.call()}
-        />
-        <LeaderboardController
-          handler_startFlow={(callback) => this.handlerHolder_LeaderboardController_startFlow.add(callback)}
-          score={this.state.score}
-          onClick_restart={() => this.props.onPressRestart()}
-          onClick_share={() => openSharePage()}
-        />
-      </div>
-    )
-  }
-
-
-  private checkPlayerAndGatesCollision() {
-    if (this.playerPipeCollisionData_GatesLocation === undefined || this.playerPipeCollisionData_playerLocation === undefined) return;
-    if (this.state.phase !== 'onGame') return;
-
-    const player = this.playerPipeCollisionData_playerLocation;
-
-    for (let gate of this.playerPipeCollisionData_GatesLocation) {
+    for (let gate of playerPipeCollisionData_GatesLocation.current) {
       if ((player.x2 > gate.x1 && player.x1 < gate.x2) && //player intersects gateX
         (player.y1 < gate.y1 || player.y2 > gate.y2)) { //but does not fit inside it at Y
-        this.endGame();
+        endGame();
         break;
       }
 
       if (player.x2 >= gate.x1 && player.x1 < gate.x1) {
-        this.setState({ playerGatePhase: 'entering' });
+        setState({ playerGatePhase: 'entering' });
       }
       else if (player.x1 >= gate.x1 && player.x2 < gate.x2) {
-        this.setState({ playerGatePhase: 'inside' });
+        setState({ playerGatePhase: 'inside' });
       }
       else if (player.x2 > gate.x2 && player.x1 <= gate.x2) {
-        this.setState({ playerGatePhase: 'leavingOrOutside' });
+        setState({ playerGatePhase: 'leavingOrOutside' });
       }
     }
   }
 
-  private startGame() {
-    this.setState({ phase: 'onGame' });
+  function startGame() {
+    setState({ phase: 'onGame' });
   }
 
-  private endGame() {
-    if (this.state.phase === 'dead') return;
-    this.handlerHolder_GameOverController_setGameOver.call(this.state.score);
-    this.setState({ phase: 'dead' });
+  function endGame() {
+    if (state.phase === 'dead') return;
+    handlerHolder_GameOverController_setGameOver.current.call(state.score);
+    setState({ phase: 'dead' });
   }
 
-  private onJumpAction() {
-    if (this.state.phase === 'intro') {
-      this.handlerHolder_Instructions_dismiss.call();
-      this.startGame();
+  function onJumpAction() {
+    if (state.phase === 'intro') {
+      handlerHolder_Instructions_dismiss.current.call();
+      startGame();
     }
-    if (this.state.phase !== 'dead') {
-      this.handlerHolder_Player_jump.call();
+    if (state.phase !== 'dead') {
+      handlerHolder_Player_jump.current.call();
     }
   }
+
+
+
+  const [state, setState] = useMergedState<State>({
+    phase: 'intro',
+    playerGatePhase: 'leavingOrOutside',
+    score: 0,
+    isMainScoreComponentShowing: true,
+  });
+
+  useEffect(() => {
+    props.handler_jump(() => onJumpAction());
+  }, []);
+
+  // useChanged(prev => {
+  //   if (prev[0].playerGatePhase === 'entering' && (state.playerGatePhase === 'inside' || state.playerGatePhase === 'leavingOrOutside')) {
+  //     setState({ score: state.score + 1 });
+  //   }
+  // }, [state]);
+
+
+
+  console.log(state.phase);
+  return (
+    <div id='Game'>
+      <Background randomSeedForGraphics={0} />
+
+      <Pipes
+        isMoving={state.phase === 'onGame'}
+        onPipesMove={(gatesLocation) => { playerPipeCollisionData_GatesLocation.current = gatesLocation; checkPlayerAndGatesCollision() }}
+      />
+      <Player
+        handler_onJump={(callback) => handlerHolder_Player_jump.current.add(callback)}
+        onUpdateFlyingPos={(rect) => { playerPipeCollisionData_playerLocation.current = rect; checkPlayerAndGatesCollision() }}
+        onCrashFloor={() => endGame()}
+      />
+      <Floor
+        isMoving={state.phase !== 'dead'}
+      />
+      {state.isMainScoreComponentShowing ?
+        <Score
+          score={state.score}
+        />
+        : null}
+      <Instructions
+        handler_dismiss={(callback) => handlerHolder_Instructions_dismiss.current.add(callback)}
+      />
+      <GameOverController
+        handler_setGameOver={(callback) => handlerHolder_GameOverController_setGameOver.current.add(callback)}
+        onShowGameOverTitle={() => setState({ isMainScoreComponentShowing: false })}
+        onClick_restart={() => props.onPressRestart()}
+        onClick_share={() => openSharePage()}
+        onReadyToRevealLeaderboardFlow={() => handlerHolder_LeaderboardController_startFlow.current.call()}
+      />
+      <LeaderboardController
+        handler_startFlow={(callback) => handlerHolder_LeaderboardController_startFlow.current.add(callback)}
+        score={state.score}
+        onClick_restart={() => props.onPressRestart()}
+        onClick_share={() => openSharePage()}
+      />
+    </div>
+  )
 
 }
 

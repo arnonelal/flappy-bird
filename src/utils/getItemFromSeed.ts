@@ -1,6 +1,6 @@
 /**
  * @param items first item must be the default item
- * @param seed between 0-1 (Math.random result or 0)
+ * @param seed between 0-(1)
  * @returns 
  */
 
