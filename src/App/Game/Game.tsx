@@ -18,7 +18,7 @@ import { useChanged } from 'hooks/useChanged';
 
 
 interface Props {
-  handler_jump: (callback: () => void) => void;
+  handler_jump: number;
   onPressRestart: () => void;
 }
 
@@ -97,14 +97,14 @@ export default function Game(props: Props) {
   });
 
   useEffect(() => {
-    props.handler_jump(() => onJumpAction());
-  }, []);
+    onJumpAction();
+  }, [props.handler_jump]);
 
-  // useChanged(prev => {
-  //   if (prev[0].playerGatePhase === 'entering' && (state.playerGatePhase === 'inside' || state.playerGatePhase === 'leavingOrOutside')) {
-  //     setState({ score: state.score + 1 });
-  //   }
-  // }, [state]);
+  useChanged(prev => {
+    if (prev[0].playerGatePhase === 'entering' && (state.playerGatePhase === 'inside' || state.playerGatePhase === 'leavingOrOutside')) {
+      setState({ score: state.score + 1 });
+    }
+  }, [state]);
 
 
 

@@ -14,13 +14,13 @@ interface Props {
 
 interface State {
   gameComponentKey: number;
+  handlerHolder_Game_jump: number;
 }
 
 
 export default class App extends Component<Props, State> {
 
   handlerHolder_BlackTransitionScreen_startTransition = new HandlerHolder<[completion: () => void]>();
-  handlerHolder_Game_jump = new HandlerHolder();
 
   containerRef: React.RefObject<HTMLDivElement>;
 
@@ -28,6 +28,7 @@ export default class App extends Component<Props, State> {
     super(props);
     this.state = {
       gameComponentKey: 0, //for restarting Game component
+      handlerHolder_Game_jump: 0,
     };
     this.containerRef = React.createRef();
   }
@@ -47,7 +48,7 @@ export default class App extends Component<Props, State> {
         onBlur={() => this.tryToFocusContainer()}
       >
         <Game
-          handler_jump={(callback) => this.handlerHolder_Game_jump.add(callback)}
+          handler_jump={this.state.handlerHolder_Game_jump}
           onPressRestart={() => this.restartGame()}
           key={this.state.gameComponentKey}
         />
@@ -62,12 +63,12 @@ export default class App extends Component<Props, State> {
 
 
   private onMouseDown() {
-    this.handlerHolder_Game_jump.call();
+    this.setState(state => ({ handlerHolder_Game_jump: state.handlerHolder_Game_jump + 1 }));
   }
 
   private onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.code === 'Space') {
-      this.handlerHolder_Game_jump.call();
+      this.setState(state => ({ handlerHolder_Game_jump: state.handlerHolder_Game_jump + 1 }));
     }
   }
 
