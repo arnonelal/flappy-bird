@@ -61,6 +61,7 @@ export default class Floor extends Component<Props, State> {
       <div
         id='Floor'
         style={{
+          top: 100 - GameConsts.floor.heightVh + 'vh',
           height: GameConsts.floor.heightVh + 'vh',
           left: this.state.xPos + 'vh',
         }}

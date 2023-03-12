@@ -14,16 +14,13 @@ export const GameConsts = {
   },
   player: {
     diameterVh: 12 * vhScaleFactor,
-    leftVh: 10,
     flyingMechanics: {
       gravity: 180, //vh/sec^2
       jumpVelocity: -65, //vh/sec
 
     },
     glidingMechanics: {
-      topOnStartVh: 30,
-      centricGravity: 0.2, //vh/sec^2
-      speed: 30,// vh/sec (todo?) //todo something weird is going with the speed and topStartVH
+      centricGravity: 0.05, //vh/sec^2
     },
   },
   floor: {

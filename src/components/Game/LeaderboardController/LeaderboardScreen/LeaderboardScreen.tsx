@@ -6,12 +6,13 @@ import { scaledPxToVh } from 'utils/getVhByScaledPx';
 import './LeaderboardScreen.scss';
 import ContentBox from './Table/ContentBox/ContentBox';
 import HighscoreLoader from './Table/HighscoreLoader/HighscoreLoader';
+import playButtonImgSrc from 'assets/gameSprites/welcome/buttons/play.png';
 
 import imgSrc_button_restart from 'assets/gameSprites/scoreboard/buttons/restart.png';
 import imgSrc_button_share from 'assets/gameSprites/scoreboard/buttons/share.png';
 
 interface Props {
-  score: number;
+  score?: number;
   onClick_restart: () => void;
   onClick_share: () => void;
 }
@@ -52,36 +53,51 @@ export default class LeaderboardScreen extends Component<Props, State> {
         }}
       >
         <h1>Leaderboard</h1>
-        <h2>Your Score: {this.props.score}</h2>
+        {this.props.score !== undefined && <h2>Your Score: {this.props.score}</h2>}
         <ContentBox
           innerContent={<HighscoreLoader />}
         />
         <div style={{ marginTop: '5vh' }}>
-          <button
-            onClick={() => this.props.onClick_restart()}
-          >
-            <img
-              src={imgSrc_button_restart}
-              style={{
-                height: scaledPxToVh(14),
-              }}
-              alt=""
-            />
-          </button>
-          <button
-            onClick={() => this.props.onClick_share()}
-            style={{
-              marginLeft: scaledPxToVh(6),
-            }}
-          >
-            <img
-              src={imgSrc_button_share}
-              style={{
-                height: scaledPxToVh(14),
-              }}
-              alt=""
-            />
-          </button>
+          {this.props.score === undefined ?
+            <button onClick={() => this.props.onClick_restart()}>
+              <img
+                src={playButtonImgSrc}
+                style={{
+                  height: scaledPxToVh(29),
+                }}
+                alt=''
+              />
+            </button>
+            :
+            <>
+              <button
+                onClick={() => this.props.onClick_restart()}
+              >
+                <img
+                  src={imgSrc_button_restart}
+                  style={{
+                    height: scaledPxToVh(14),
+                  }}
+                  alt=""
+                />
+              </button>
+              <button
+                onClick={() => this.props.onClick_share()}
+                style={{
+                  marginLeft: scaledPxToVh(6),
+                }}
+              >
+                <img
+                  src={imgSrc_button_share}
+                  style={{
+                    height: scaledPxToVh(14),
+                  }}
+                  alt=""
+                />
+              </button>
+            </>
+          }
+
         </div>
       </div>
     )

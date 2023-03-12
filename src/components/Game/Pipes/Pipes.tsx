@@ -5,10 +5,12 @@ import { BasicInterval } from 'utils/BasicInterval';
 import { GameConsts } from 'utils/GameConsts';
 import { Rect } from 'utils/Rect';
 import { FpsIntervalController, fpsIntervalController } from 'utils/fpsIntervalController';
+import { vwToVh } from 'utils/vhToVw';
 
 interface Props {
   isMoving: boolean,
   onPipesMove: (gatesLocation: Rect[]) => void,
+  playerLeftPosVw: number,
 }
 
 interface State {
@@ -142,8 +144,8 @@ export default class Pipes extends Component<Props, State> {
 
     const gates: Rect[] = [];
 
-    for (let i = 0; i < cLosestPipesToPlayer.length; i++) {
-      const pipe = pipes.find(pipe => pipe.index === cLosestPipesToPlayer[i]);
+    for (let i = 0; i < this.cLosestPipesToPlayer.length; i++) {
+      const pipe = pipes.find(pipe => pipe.index === this.cLosestPipesToPlayer[i]);
       if (pipe === undefined) continue;
       gates.push(getGateAreaForPipe(pipe));
     }
@@ -151,13 +153,15 @@ export default class Pipes extends Component<Props, State> {
     this.props.onPipesMove(gates);
   }
 
+  cLosestPipesToPlayer = (() => {
+    const firstPipe = Math.floor((vwToVh(this.props.playerLeftPosVw) + GameConsts.player.diameterVh) / (GameConsts.pipe.pipeWidthVh + GameConsts.pipe.distanceVh));
+    return [firstPipe, firstPipe + 1];
+  })();
+
 }
 
 
-const cLosestPipesToPlayer = (() => {
-  const firstPipe = Math.floor((GameConsts.player.leftVh + GameConsts.player.diameterVh) / (GameConsts.pipe.pipeWidthVh + GameConsts.pipe.distanceVh));
-  return [firstPipe, firstPipe + 1];
-})();
+
 
 
 

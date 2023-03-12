@@ -9,7 +9,6 @@ import Score from './Score/Score';
 import Background from './Background/Background';
 import Instructions from './Instructions/Instructions';
 import GameOverController from './GameOverController/GameOverController';
-import BlackTransitionScreen from 'components/BlackTransitionScreen/BlackTransitionScreen';
 import LeaderboardController from './LeaderboardController/LeaderboardController';
 import { openSharePage } from 'utils/fetch';
 
@@ -59,6 +58,8 @@ export default class Game extends Component<Props, State> {
     }
   }
 
+  playerLeftPosVw = 35;
+
   render() {
     return (
       <div id='Game'>
@@ -67,11 +68,14 @@ export default class Game extends Component<Props, State> {
         <Pipes
           isMoving={this.state.phase === 'onGame'}
           onPipesMove={(gatesLocation) => { this.playerPipeCollisionData_GatesLocation = gatesLocation; this.checkPlayerAndGatesCollision() }}
+          playerLeftPosVw={this.playerLeftPosVw}
         />
         <Player
           handler_onJump={(callback) => this.handlerHolder_Player_jump.add(callback)}
           onUpdateFlyingPos={(rect) => { this.playerPipeCollisionData_playerLocation = rect; this.checkPlayerAndGatesCollision() }}
           onCrashFloor={() => this.endGame()}
+          startingTopPosVh={47}
+          startingLeftPosVw={this.playerLeftPosVw}
         />
         <Floor
           isMoving={this.state.phase !== 'dead'}

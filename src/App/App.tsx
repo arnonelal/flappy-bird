@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import { HandlerHolder } from 'utils/HandlerHolder';
 import './App.scss';
 import BlackTransitionScreen from '../components/BlackTransitionScreen/BlackTransitionScreen';
-import Game from './Game/Game';
+import Game from 'components/Game/Game';
 import 'assets/fonts/flappy.ttf';
-import ContentBox from 'App/Game/LeaderboardController/LeaderboardScreen/Table/ContentBox/ContentBox';
-import Table from 'App/Game/LeaderboardController/LeaderboardScreen/Table/Table';
+import ContentBox from 'components/Game/LeaderboardController/LeaderboardScreen/Table/ContentBox/ContentBox';
+import Table from 'components/Game/LeaderboardController/LeaderboardScreen/Table/Table';
+import Welcome from 'components/Welcome/Welcome';
+import LeaderboardScreen from 'components/Game/LeaderboardController/LeaderboardScreen/LeaderboardScreen';
+import ImagesLoader from 'components/ImagesLoader/ImagesLoader';
 
 
 
@@ -14,6 +17,7 @@ interface Props {
 
 interface State {
   gameComponentKey: number;
+  phase: 'welcome' | 'game' | 'leaderboards';
 }
 
 
@@ -28,6 +32,7 @@ export default class App extends Component<Props, State> {
     super(props);
     this.state = {
       gameComponentKey: 0, //for restarting Game component
+      phase: 'welcome',
     };
     this.containerRef = React.createRef();
   }
@@ -46,16 +51,24 @@ export default class App extends Component<Props, State> {
         onKeyDown={(e) => this.onKeyDown(e)}
         onBlur={() => this.tryToFocusContainer()}
       >
-        <Game
+        <ImagesLoader />
+        {(this.state.phase === 'welcome' || this.state.phase === 'leaderboards') && <Welcome
+          onPressLeaderboards={() => this.setState({ phase: 'leaderboards' })}
+          onPressPlay={() => this.startGame()}
+        />}
+        {this.state.phase === 'leaderboards' && <LeaderboardScreen
+          onClick_restart={() => this.startGame()}
+          onClick_share={() => 0}
+        />}
+        {this.state.phase === 'game' && <Game
           handler_jump={(callback) => this.handlerHolder_Game_jump.add(callback)}
           onPressRestart={() => this.restartGame()}
           key={this.state.gameComponentKey}
-        />
+        />}
+
         <BlackTransitionScreen
           handler_startTransition={(callback) => this.handlerHolder_BlackTransitionScreen_startTransition.add(callback)}
         />
-        {/* <Table /> */}
-        {/* <button onClick={() => this.foo()}>sdfdsf</button> */}
       </div>
     );
   }
@@ -69,6 +82,12 @@ export default class App extends Component<Props, State> {
     if (e.code === 'Space') {
       this.handlerHolder_Game_jump.call();
     }
+  }
+
+  private startGame() {
+    this.handlerHolder_BlackTransitionScreen_startTransition.call(() => {
+      this.setState({ phase: 'game' });
+    });
   }
 
   private restartGame() {
