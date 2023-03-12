@@ -1,7 +1,7 @@
 import Floor from './Floor/Floor';
 import Pipes from './Pipes/Pipes';
 import Player from './Player/Player';
-import { Component, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { HandlerHolder } from 'utils/HandlerHolder';
 import { Rect } from 'utils/Rect';
 import './Game.scss';
@@ -14,6 +14,7 @@ import { openSharePage } from 'utils/fetch';
 import { useLazyRef } from 'hooks/useLazyRef';
 import { useMergedState } from 'hooks/useMergedState';
 import { useChanged } from 'hooks/useChanged';
+import { useTriggerEffect } from 'hooks/useTrigger';
 
 
 
@@ -29,8 +30,9 @@ interface State {
   playerGatePhase: 'entering' | 'inside' | 'leavingOrOutside'; //'gate' is the gap between the pipes
 }
 
-export default function Game(props: Props) {
 
+
+export default function Game(props: Props) {
 
   const handlerHolder_Player_jump = useLazyRef(() => new HandlerHolder());
   const handlerHolder_GameOverController_setGameOver = useLazyRef(() => new HandlerHolder<[score: number]>()); //todo initiateGameOver
@@ -87,8 +89,6 @@ export default function Game(props: Props) {
     }
   }
 
-
-
   const [state, setState] = useMergedState<State>({
     phase: 'intro',
     playerGatePhase: 'leavingOrOutside',
@@ -96,15 +96,14 @@ export default function Game(props: Props) {
     isMainScoreComponentShowing: true,
   });
 
-  useEffect(() => {
-    onJumpAction();
-  }, [props.handler_jump]);
+
+  useTriggerEffect(() => onJumpAction(), props.handler_jump);
 
   useChanged(prev => {
-    if (prev[0].playerGatePhase === 'entering' && (state.playerGatePhase === 'inside' || state.playerGatePhase === 'leavingOrOutside')) {
+    if (prev.state.playerGatePhase === 'entering' && (state.playerGatePhase === 'inside' || state.playerGatePhase === 'leavingOrOutside')) {
       setState({ score: state.score + 1 });
     }
-  }, [state]);
+  }, { state });
 
 
 

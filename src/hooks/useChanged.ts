@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export function useChanged<T extends Array<any>>(
+export function useChanged<T extends {}>(
   effect: (prevDeps: T) => void,
   dependencies: T,
 ) {
@@ -10,5 +10,5 @@ export function useChanged<T extends Array<any>>(
     effect(ref.current);
     console.log(ref.current, dependencies);
     ref.current = dependencies;
-  }, dependencies);
+  }, Object.values(dependencies));
 }
